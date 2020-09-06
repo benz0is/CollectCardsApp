@@ -1,26 +1,53 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext, useState } from "react";
+import { useDispatch } from "react-redux";
+import { Context } from "../context/ContextProvider";
+import { useHistory } from "react-router-dom";
+import { sign_in } from "../actions/index";
 
 const LogInPage = () => {
+  const dispatch = useDispatch();
+  let history = useHistory();
+  const { username, setUsername, password, setPassword } = useContext(Context);
+  const [errorMsg, setErrorMsg] = useState(false);
+  const [api, setApi] = useState([]);
+
   useEffect(() => {
-    const cors = "https://cors-anywhere.herokuapp.com/";
     const fetchData = async () => {
-      const response = await fetch("http://localhost:3001/api", {
+      await fetch("http://localhost:3001/api", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           query: `query
           {user {
+            id
             username
             password
+            picture
+            balance
           }
         }`,
-          headers: { "Content-Type": "application/json" },
         }),
       })
         .then((res) => res.json())
-        .then((data) => console.log(data));
+        .then((res) => setApi(res));
     };
     fetchData();
-  });
+  }, []);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(api);
+    api.data.user.map((res) => {
+      if (res.username === username && res.password === password) {
+        dispatch(sign_in());
+        sessionStorage.setItem("logged", "true");
+        sessionStorage.setItem("username", username);
+        sessionStorage.setItem("picture", res.picture);
+        sessionStorage.setItem("balance", res.balance);
+        history.push(`/Home/${res.id}`);
+      } else setErrorMsg(true);
+    });
+  };
+
   return (
     <form
       className="container p-4 mt-5"
@@ -31,14 +58,19 @@ const LogInPage = () => {
       }}
     >
       <div className="form-group">
-        <label htmlFor="Login">Login</label>
+        <label htmlFor="Login">
+          {errorMsg ? "User not found" : "Please Login"}
+        </label>
       </div>
       <div className="form-group">
         <label htmlFor="Username">Username</label>
         <input
           type="text"
           className="form-control"
-          placeholder="Enter username"
+          placeholder="Enter Username"
+          onChange={(e) => {
+            setUsername(e.target.value);
+          }}
         />
       </div>
       <div className="form-group">
@@ -46,7 +78,10 @@ const LogInPage = () => {
         <input
           type="password"
           className="form-control"
-          placeholder="Password"
+          placeholder="Enter Password"
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
         />
       </div>
       <div className="form-group">
@@ -57,7 +92,13 @@ const LogInPage = () => {
         </small>
       </div>
 
-      <button type="submit" className="btn btn-primary">
+      <button
+        type="submit"
+        className="btn btn-primary"
+        onClick={(e) => {
+          handleSubmit(e);
+        }}
+      >
         Submit
       </button>
     </form>

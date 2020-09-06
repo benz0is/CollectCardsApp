@@ -1,0 +1,21 @@
+a:hover {
+  transform: scale(1.02);
+}
+
+.mask:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  mask-image: "red";
+}
+.plus:hover {
+  cursor: pointer;
+}
+
+.foto:hover {
+  cursor: pointer;
+  transform: scale(1.02);
+  border: 1px solid black;
+}
+
+/* .foto:active {
+} */
