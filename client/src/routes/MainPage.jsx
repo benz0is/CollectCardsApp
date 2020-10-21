@@ -68,7 +68,6 @@ const MainPage = (props) => {
         }}`,
       }),
     }).then((res) => res.json());
-    console.log(response);
     setPost("");
   };
   return (
