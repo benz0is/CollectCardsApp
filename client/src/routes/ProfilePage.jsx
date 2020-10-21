@@ -37,8 +37,6 @@ const ProfilePage = (props) => {
       }}`,
       }),
     })
-      .then((res) => res.json())
-      .then((res) => console.log(res));
     sessionStorage.setItem("picture", picture);
     handleCloseProfile();
     const secRes = await fetch("http://localhost:3001/api", {
