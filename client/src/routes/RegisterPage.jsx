@@ -45,8 +45,6 @@ const RegisterPage = () => {
         }}`,
       }),
     })
-      .then((res) => res.json())
-      .then((res) => console.log(res));
     history.push("/");
   };
   return (
