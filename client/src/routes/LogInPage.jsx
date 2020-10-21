@@ -35,7 +35,6 @@ const LogInPage = () => {
   }, []);
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(api);
     api.data.user.map((res) => {
       if (res.username === username && res.password === password) {
         dispatch(sign_in());
